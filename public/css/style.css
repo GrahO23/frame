@@ -1,0 +1,212 @@
+
+body{
+/*	-webkit-transform: rotate(270deg);
+    -webkit-transform-origin: 350 355;*/
+    width : 800px;
+    height: 600px;
+    padding-left: 80px;
+    background-color: white;
+}
+
+.VolumeDown{
+    position: fixed;
+    top:70%;
+    width: 50%;
+    height: 30%;
+    z-index: 1000;
+}
+
+.VolumeUp{
+    position: fixed;
+    top:70%;
+    width: 50%;
+    height: 30%;
+    left: 50%;
+    z-index: 1000;
+}
+
+#meter{
+    z-index: 1000;
+}
+
+#tfl-outerdiv
+{
+    float : left;
+    left : -10%;
+    width    : 40%;
+    height   : 50%;
+    overflow: hidden;
+    /*-webkit-transform: translate(-100px,-80px);*/
+}
+
+
+#list{
+    background-color: grey;
+    font-size:20px;
+    
+    /*padding-top: 100px;*/
+/*       text-align: center;*/
+}
+
+dt{
+    padding-left: 10px; 
+}
+
+dt:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+#clockbox{
+    float : left;
+    background-color: #FFFFFF;
+    width: 60%;
+    height:70%;
+    /*z-index: 10;*/
+    font-size:150px;
+/*    border-width:5px;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: solid;*/
+    }
+
+#clockbox #clock{
+    font-size:150px;
+    text-align: center;
+    line-height: 95%;
+}
+
+#clockbox #am{
+    font-size:30px;
+    text-align: center;
+}
+
+#clockbox #date{
+    font-size:40px;
+    text-align: center;
+}
+
+#clockbox #currently-container{
+    background-color: white;
+    width: 100%;
+    height: 40%;
+}
+
+#clockbox .day-label{
+    position: relative;
+    font-size: 30px;
+    top: 10px;
+    left: -90px;
+    display: block;
+}
+
+#currently-container #currently{
+    background-color: white;
+    float: left;
+    width: 50%;
+    padding-top: 20px;
+    padding-left: 50px;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: auto;
+    display: block;
+}
+
+#currently-container #currently-temp{
+    position: absolute;
+    font-size:100px;
+    padding-top: 0px;
+    padding-left: 270px;
+}
+
+#currently-container #current-rain-chance{
+  position: initial;
+  font-size: 40px;
+  float: left;
+  bottom: 0;
+  padding-left: 65px;
+}
+
+#weather-container{
+    /*padding-left: 60px;*/
+    padding-top: 450px;
+    float : left;	
+    width : 100%;
+    height: 30%;
+    -webkit-transform: scale(0.75,0.75);
+    z-index: 100;
+    position: absolute;
+}
+
+#weather-container .forecast-day{
+    padding-top: 30px;
+    padding-right: 20px;
+    float: left;
+    height: 100%;
+    width: 30%;
+}   
+
+#weather-container .forecast-day:nth-child(1+0) {
+    background: blue;
+}
+
+#weather-container .forecast-day .forecast-day-canvas{
+    width: 80%;
+}
+
+#weather-container .forecast-day .forecast-day-temp{
+   font-size:30px; 
+}
+
+
+#weather-container .day-label{
+    font-size: 30px;
+    padding-left: 50px;
+    padding-right: 0;
+    text-align: left;
+    display: none;
+}
+
+#last-updated {
+position: fixed;
+height: 20px;  /* Can be anything */
+width: 400px;
+margin: 590px 0 20px 0; /* Just for demo spacing */
+}
+
+/*#now-playing {
+position: fixed;
+font-size:30px;
+height: 70px; 
+width: 300px;
+background-color: red;
+overflow: hidden;
+
+margin: 290px 0 20px 0; 
+}*/
+
+
+#now-playing 
+{
+    position: absolute;
+    font-size: 30px;
+    text-align: center;
+    height: 70px;
+    width: 100%;
+    overflow: hidden;
+    margin: 555px 0 20px 0;
+    background-color: white;
+}
+
+#mute { 
+            height: 50px;  /* Can be anything */
+            width: 50px;
+            padding-top: 150px;
+            position: fixed;
+            margin: 365px 0 20px 100px; /* Just for demo spacing */
+            background: #000;
+            border-radius: 25px;
+            padding: 10px;
+            z-index: 1000;
+        }
+

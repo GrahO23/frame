@@ -1,0 +1,33 @@
+{
+  "name": "OldfieldFrame",
+  "version": "0.1.3",
+  "description": "Kindle weather station",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "~4.9.x",
+    "forecast.io": "0.0.9",
+    "path": "^0.11.14",
+    "promise": "^7.0.3",
+    "q": "^1.4.1",
+    "socket.io": "^1.3.5",
+    "sonos": "git://github.com/bencevans/node-sonos.git",
+    "unirest": "^0.2.6",
+    "xml2js": "^0.4.3"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heroku/node-js-getting-started"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
+}
