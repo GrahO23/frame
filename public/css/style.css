@@ -27,7 +27,7 @@ body{
     border-top-color : white;
     background-color: black;
 }
-
+/* 
 .VolumeDown{
     position: fixed;
     top:70%;
@@ -43,7 +43,7 @@ body{
     height: 30%;
     left: 50%;
     z-index: 1000;
-}
+} */
 
 #meter{
     z-index: 1000;
