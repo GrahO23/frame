@@ -20,30 +20,13 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 20%;
+    height: 100px;
     width: 100%;
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color : white;
     background-color: black;
 }
-/* 
-.VolumeDown{
-    position: fixed;
-    top:70%;
-    width: 50%;
-    height: 30%;
-    z-index: 1000;
-}
-
-.VolumeUp{
-    position: fixed;
-    top:70%;
-    width: 50%;
-    height: 30%;
-    left: 50%;
-    z-index: 1000;
-} */
 
 #meter{
     z-index: 1000;

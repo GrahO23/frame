@@ -243,6 +243,11 @@ function bindListeners() {
 
     });
 
+    
+    $(".muteVolume").click(function() {
+        mute();
+
+    });
     $("#mute").click(function() {
         mute();
 
