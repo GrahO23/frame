@@ -78,9 +78,8 @@ app.get('/forecast', function(req, res) {
 
 app.get('/sonos/volume', function(req, res) {
     // console.log('/sonos/volume');
-    sonosClient.volume().then(function(volume) {
-    res.send(JSON.stringify(volume));
-    });
+    
+    res.send(JSON.stringify(sonosClient.volume()));
 
 });
 
@@ -127,9 +126,9 @@ app.get('/sonos/volume/down', function(req, res) {
 
 app.get('/sonos/currentTrack', function(req, res) {
     // console.log('/sonos/currentTrack');
-    sonosClient.currentTrack().then(function(track) {
-        res.send(JSON.stringify(track));
-    });
+    // sonosClient.currentTrack().then(function(track) {
+    //     res.send(JSON.stringify(track));
+    // });
 
 });
 
@@ -171,20 +170,18 @@ function getForecast(cb) {
 }
 
 /* Socket.io */
-var lastVolume = -1;
 
-function listenForVolumeChanges() {
-
+function listenForVolumeChanges(lastVolume) {
+    
     // console.log('listenForVolumeChanges');
     sonosClient.volume().then(function(volume) {
-        // console.log('lastVolume: ' + lastVolume  + " vol: " + volume);
+        console.log('lastVolume: ' + lastVolume  + " vol: " + volume);
         if(lastVolume !== volume.volume ) {
             // console.log('vol change: ' + volume );
-            lastVolume = volume.volume;
             io.emit('volume change', volume);
         }
         setTimeout( function() {
-            listenForVolumeChanges();
+            listenForVolumeChanges(volume.volume);
         }, 1000);
     });
 }

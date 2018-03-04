@@ -1,4 +1,4 @@
-var sonos = require('sonos');
+const {DeviceDiscovery , Sonos} = require('sonos');
 var Q = require('q');
 var that;
 
@@ -20,164 +20,64 @@ var SonosClient = function SonosClient() {
     that = this;
     that.client = null;
     that.sonosDevice = null;
-    sonos.search(function(device) {
-        // device is an instance of sonos.Sonos
+    DeviceDiscovery((device) => {
+        console.log('found device at ' + device.host)
+        console.log("sonos: " + JSON.stringify(device));
         that.sonosDevice = device;
-        console.log("sonos.search: " + JSON.stringify(device));
-        that.client = new sonos.Sonos(that.sonosDevice.host, that.sonosDevice.port);
+        // that.client = new Sonos(that.sonosDevice.host, that.sonosDevice.port);
+      })
 
-        // that.client.getCurrentState(function(err, track) {
-        //     console.log('sonos state: ' + err + ' track: ' + track);
-        // });
-
-        // that.client.getVolume(function(vol) {
-        //     console.log('sonos volume: ' + vol);
-        // });
-
-        // that.client.deviceDescription(function(err, dev) {
-        //     console.log('sonos deviceDescription: ' + err + " deviceDescription: " + JSON.stringify(dev));
-        // });
-
-        // that.client.getZoneAttrs(function(err, dev) {
-        //     console.log('sonos getZoneAttrs: ' + err + " getZoneAttrs: " + JSON.stringify(dev));
-        // });
-
-        // that.client.getZoneInfo(function(err, dev) {
-        //     console.log('sonos getZoneInfo: ' + err + " getZoneInfo: " + JSON.stringify(dev));
-        // });
-
-        // that.client.play(function(err, dev) {
-        //     console.log('sonos play: ' + err + " info: " + JSON.stringify(dev));
-        // });
-
-        // device.currentTrack('current track: ' + console.log);
-    });
 
 };
 
-SonosClient.prototype.mute = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.getMuted(function(err, muted) {
-            // console.log('sonos volume: ' + vol + ' muted: ' + muted);
-            that.client.setMuted(!muted, function() {
-                deferred.resolve({
-                    muted: !muted
-                });
-            });
+SonosClient.prototype.mute = async function() {
+    // var deferred = Q.defer();
+    console.log('this.client ' +that.sonosDevice);
 
-        });
-    } else {
-        deferred.resolve(0);
-    }
-    return deferred.promise;
+    const muted = await that.sonosDevice.getMuted()
+    that.sonosDevice.setMuted(!muted)
+    // `${ that.sonosDevice.host} now muted`
 };
 
-SonosClient.prototype.volume = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.getVolume(function(err, vol) {
-            that.client.getMuted(function(err, muted) {
-                // console.log('sonos volume: ' + vol + ' muted: ' + muted);
-                vol = muted === true ? 0 : vol;
-                deferred.resolve({
-                    volume: vol,
-                    muted: muted
-                });
-            });
-        });
-    } else {
-        deferred.resolve(0);
-    }
-    return deferred.promise;
+SonosClient.prototype.volume = async function() {
+    const vol = await that.sonosDevice.getVolume()
+    const muted = await that.sonosDevice.getMuted()
+    return {volume : vol , muted : muted}
 };
 
 SonosClient.prototype.next = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.next(function(err) {
-            deferred.resolve({});
-        });
-    } else {
-        deferred.resolve(0);
-    }
-    return deferred.promise;
+    return that.sonosDevice.next();
 };
 
 SonosClient.prototype.previous = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.previous(function(err) {
-            deferred.resolve({});
-        });
-    } else {
-        deferred.resolve(0);
-    }
-    return deferred.promise;
+    return that.sonosDevice.previous();
+
 };
 
-SonosClient.prototype.volumeup = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.getVolume(function(err, vol) {
-            var v = JSON.parse(vol);
-            v+=10;
-            if (v > 100) {
-                v = 100;
-            }
-            console.log('volumeup ' + v);
-            that.client.setVolume(JSON.stringify(v), function() {});
-            deferred.resolve({
-                volume: vol
-            });
-
-        });
-    } else {
-        deferred.resolve(0);
+SonosClient.prototype.volumeup = async function() {
+    const volume = await that.sonosDevice.getVolume()
+    var v = JSON.parse(volume);
+    v+=10;
+    if (v > 100) {
+        v = 100;
     }
-    return deferred.promise;
+    return that.sonosDevice.setVolume(v);
 };
 
-SonosClient.prototype.volumedown = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.getVolume(function(err, vol) {
-            var v = JSON.parse(vol);
-            v-=10;
-            if (v < 0) {
-                v = 0;
-            }
-            console.log('volumedown ' + v);
-            that.client.setVolume(JSON.stringify(v), function() {});
-            deferred.resolve({
-                volume: vol
-            });
+SonosClient.prototype.volumedown = async function() {
 
-        });
-    } else {
-        deferred.resolve(0);
+    const volume = await that.sonosDevice.getVolume()
+    var v = JSON.parse(volume);
+    v-=10;
+    if (v < 0) {
+        v = 0;
     }
-    return deferred.promise;
+    return that.sonosDevice.setVolume(v);
 };
 
-SonosClient.prototype.currentTrack = function() {
-    var deferred = Q.defer();
-    console.log('this.client ' + this.client);
-    if (that.client) {
-        that.client.currentTrack(function(err, track) {
-            console.log('track: ' + JSON.stringify(track));
-            deferred.resolve(track);
-        });
-    } else {
-        deferred.resolve(0);
-    }
-    return deferred.promise;
+SonosClient.prototype.currentTrack = async function() {
+    const track = await that.sonosDevice.currentTrack()
+    return track
 };
 
 
