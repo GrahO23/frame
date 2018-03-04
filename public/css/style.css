@@ -8,6 +8,26 @@ body{
     background-color: white;
 }
 
+.controlbox{
+    float:right;
+    width: 10%;
+    height: 100%;
+    color: white;
+
+}
+
+.control{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
+    width: 100%;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color : white;
+    background-color: black;
+}
+
 .VolumeDown{
     position: fixed;
     top:70%;
@@ -56,10 +76,12 @@ dt:not(:last-child) {
     margin-bottom: 5px;
 }
 
+
+
 #clockbox{
     float : left;
     background-color: #FFFFFF;
-    width: 60%;
+    width: 50%;
     height:70%;
     /*z-index: 10;*/
     font-size:150px;
