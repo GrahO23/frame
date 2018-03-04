@@ -244,7 +244,9 @@ function bindListeners() {
     });
 
     
-    $(".muteVolume").click(function() {
+    $(".control.muteVolume").click(function(e) {
+        e.preventDefault();
+        console.log("muteVolume")
         mute();
 
     });
@@ -253,7 +255,9 @@ function bindListeners() {
 
     });
 
-    $(".VolumeUp").click(function() {
+    $("#volup").click(function(e) {
+        e.preventDefault();
+        console.log("VolumeUp")
         $.ajax({
             url: window.location.origin + "/sonos/volume/up",
             type: "GET",
@@ -268,7 +272,9 @@ function bindListeners() {
 
     });
 
-    $(".VolumeDown").click(function() {
+    $("#voldown").click(function(e) {
+        e.preventDefault();
+        console.log("VolumeDown")
         $.ajax({
             url: window.location.origin + "/sonos/volume/down",
             type: "GET",
@@ -432,10 +438,10 @@ window.onload = function() {
     kindleFrame.skycons.add(document.querySelector('#weather-container #forecast-day-1 .forecast-day-canvas'), Skycons.CLEAR_DAY);
     kindleFrame.skycons.add(document.querySelector('#weather-container #forecast-day-2 .forecast-day-canvas'), Skycons.CLEAR_DAY);
 
-    if (window.screen.width > 800) {
-        $("body").css("-webkit-transform", "rotate(0deg)");
-        $("body").css("-webkit--origin", "0 0");
-    }
+    // if (window.screen.width > 800) {
+    //     $("body").css("-webkit-transform", "rotate(0deg)");
+    //     $("body").css("-webkit--origin", "0 0");
+    // }
 
 
     var WeatherBugSticker_728x90_v2 = document.getElementById("WeatherBugSticker_728x90_v2");
