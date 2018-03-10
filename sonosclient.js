@@ -60,7 +60,8 @@ SonosClient.prototype.volumeup = async function() {
     if (v > 100) {
         v = 100;
     }
-    return that.sonosDevice.setVolume(v);
+    let res = await that.sonosDevice.setVolume(v);
+    return v;
 };
 
 SonosClient.prototype.volumedown = async function() {
@@ -71,7 +72,8 @@ SonosClient.prototype.volumedown = async function() {
     if (v < 0) {
         v = 0;
     }
-    return that.sonosDevice.setVolume(v);
+    let res = await that.sonosDevice.setVolume(v);
+    return v;
 };
 
 SonosClient.prototype.currentTrack = async function() {
