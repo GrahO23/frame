@@ -254,17 +254,18 @@ function bindListeners() {
 
     $("#gardenlight").click(function(e) {
         e.preventDefault();
-        console.log("VolumeUp")
+        console.log("garden light toggle")
         $(e.target).fadeOut().fadeIn();
         $.ajax({
-            url: window.location.origin + "/sonos/volume/up",
+            url: window.location.origin + "/ring/garden/light",
             type: "GET",
             dataType: "html",
             success: function(data) {
-                updateSonosVolumeUX(JSON.parse(data));
+                console.log('toggle light')
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 // debug here
+                console.log('toggle light error')
             }
         });
 
