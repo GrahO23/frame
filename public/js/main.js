@@ -86,10 +86,10 @@ function getDayOfWeek(unixTime) {
 function updateSonosVolumeUX(volume) {
     $(".meter span").css("width", volume.volume + "%");
     if (volume.muted) {
-        document.getElementById('mute').style.display = 'block';
+        document.getElementById('muteIcon').style.display = 'block';
         document.getElementById('meter').style.display = 'none';
     } else {
-        document.getElementById('mute').style.display = 'none';
+        document.getElementById('muteIcon').style.display = 'none';
         document.getElementById('meter').style.display = 'block';
     }
 }

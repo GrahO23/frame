@@ -175,13 +175,15 @@ function listenForVolumeChanges(lastVolume) {
     
     // console.log('listenForVolumeChanges');
     sonosClient.volume().then(function(volume) {
-        console.log('lastVolume: ' + lastVolume  + " vol: " + volume);
-        if(lastVolume !== volume.volume ) {
+        console.log('lastVolume: ' + lastVolume  + " vol: " + JSON.stringify(volume));
+        if(lastVolume && 
+            (lastVolume.volume !== volume.volume || 
+                lastVolume.muted !== volume.muted) ) {
             // console.log('vol change: ' + volume );
             io.emit('volume change', volume);
         }
         setTimeout( function() {
-            listenForVolumeChanges(volume.volume);
+            listenForVolumeChanges(volume);
         }, 1000);
     });
 }

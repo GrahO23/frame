@@ -31,11 +31,10 @@ var SonosClient = function SonosClient() {
 };
 
 SonosClient.prototype.mute = async function() {
-    // var deferred = Q.defer();
-    console.log('this.client ' +that.sonosDevice);
-
-    const muted = await that.sonosDevice.getMuted()
+    let muted = await that.sonosDevice.getMuted()
     that.sonosDevice.setMuted(!muted)
+    muted = await that.sonosDevice.getMuted()
+    console.log('muted state '+ muted)
     // `${ that.sonosDevice.host} now muted`
 };
 
