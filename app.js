@@ -9,11 +9,18 @@ var express = require('express'),
     path = require('path'),
     SonosClient = require('./sonosclient.js').SonosClient,
     fs = require('fs');
+    RingAPI = require('doorbot');
 
 var configPath = path.resolve(__dirname, 'config.json');
 console.log('config path : ' + configPath);
 //'/home/pi/projects/OldfieldFrame/config.json'
 var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+var ringpasswordPath = path.resolve(__dirname, 'ring.password');
+var ringpassword = fs.readFileSync(ringpasswordPath, 'utf8');
+
+
+
 var ioSocket;
 // The number of milliseconds in one day
 var oneDay = 86400000;
@@ -202,5 +209,50 @@ http.listen(3000, function() {
     console.log('listening on *:3000');
 });
 // app.listen(process.env.PORT || 3000);
+
+/*
+* RING
+*/
+var ringCreds = {
+    user:'graham.p.oldfield@gmail.com',
+    password:ringpassword
+}
+
+const ring = RingAPI({
+    email: ringCreds.user,
+    password: ringCreds.password,
+    retries: 3, //authentication retries, optional, defaults to 0
+    userAgent: 'My User Agent' //optional, defaults to @nodejs-doorbot
+});
+
+let garden = undefined
+
+ring.devices((e, devices) => {
+    console.log(e, devices);
+    ring.history((e, history) => {
+        console.log(e, history);
+        ring.recording(history[0].id, (e, recording) => {
+            console.log(e, recording);
+            const check = () => {
+                console.log('Checking for ring activity..');
+                ring.dings((e, json) => {
+                    console.log(e, json);
+                });
+            };
+            setInterval(check, 30 * 1000);
+            check();
+        });
+    });
+
+    //floodlights are under the stickups_cams prop
+    if (devices.hasOwnProperty('stickup_cams') && 
+        Array.isArray(devices.stickup_cams) &&
+        devices.stickup_cams.length > 0) {
+        
+        ring.lightToggle(devices.stickup_cams[0], (e) => {
+            //Light state has been toggled
+        });
+    }
+});
 
 console.log('starting frame...');

@@ -7,6 +7,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "doorbot": "^3.1.0",
     "express": "~4.9.x",
     "forecast.io": "0.0.9",
     "path": "^0.11.14",
