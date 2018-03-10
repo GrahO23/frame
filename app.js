@@ -149,17 +149,19 @@ function toggleLight(callback){
                 Array.isArray(devices.stickup_cams) &&
                 devices.stickup_cams.length > 0) {
                 let garden = devices.stickup_cams[0];
-                ring.lightToggle(garden, callback);
+                ring.lightToggle(garden, function(){
+                });
                 console.log('toggle light');
             }
         });
     }
+    callback();//seems to wedge
 
 }
 
 app.get('/ring/garden/light', function(req, res) {
-    toggleLight(function(){
-        res.send(200);
+    toggleLight(function(data){
+        res.send(JSON.stringify(data));
     });
     
 
@@ -247,7 +249,7 @@ var ringCreds = {
 const ring = RingAPI({
     email: ringCreds.user,
     password: ringCreds.password,
-    retries: 3, //authentication retries, optional, defaults to 0
+    retries: 0, //authentication retries, optional, defaults to 0
     userAgent: 'My User Agent' //optional, defaults to @nodejs-doorbot
 });
 

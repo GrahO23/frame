@@ -261,7 +261,7 @@ function bindListeners() {
             type: "GET",
             dataType: "html",
             success: function(data) {
-                console.log('toggle light')
+                console.log('toggle light: '+ data)
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 // debug here

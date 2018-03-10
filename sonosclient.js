@@ -53,10 +53,12 @@ SonosClient.prototype.previous = function() {
 
 };
 
+const volumeInc = 5;
+
 SonosClient.prototype.volumeup = async function() {
     const volume = await that.sonosDevice.getVolume()
     var v = JSON.parse(volume);
-    v+=10;
+    v+=volumeInc;
     if (v > 100) {
         v = 100;
     }
@@ -68,7 +70,7 @@ SonosClient.prototype.volumedown = async function() {
 
     const volume = await that.sonosDevice.getVolume()
     var v = JSON.parse(volume);
-    v-=10;
+    v-=volumeInc;
     if (v < 0) {
         v = 0;
     }
