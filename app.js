@@ -142,9 +142,9 @@ app.get('/sonos/currentTrack', function(req, res) {
 function toggleLight(callback){
     if(ring){
         ring.devices((e, devices) => {
-            // console.log(e, devices);
+            console.log(e, devices);
             //floodlights are under the stickups_cams prop
-            if (devices.hasOwnProperty('stickup_cams') && 
+            if (devices && devices.hasOwnProperty('stickup_cams') && 
                 Array.isArray(devices.stickup_cams) &&
                 devices.stickup_cams.length > 0) {
                 let garden = devices.stickup_cams[0];
