@@ -18,6 +18,7 @@ var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 var ringpasswordPath = path.resolve(__dirname, 'ring.password');
 var ringpassword = fs.readFileSync(ringpasswordPath, 'utf8');
+ringpassword = ringpassword.replace(/(\r\n\t|\n|\r\t)/gm,"");
 console.log("RING :'"+ringpassword+"'")
 
 
