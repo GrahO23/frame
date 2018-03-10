@@ -244,20 +244,36 @@ function bindListeners() {
     });
 
     
-    $(".control.muteVolume").click(function(e) {
+    $("#muteVolume").click(function(e) {
         e.preventDefault();
         console.log("muteVolume")
+        $(e.target).fadeOut().fadeIn();
         mute();
 
     });
-    $("#mute").click(function() {
-        mute();
+
+    $("#gardenlight").click(function(e) {
+        e.preventDefault();
+        console.log("VolumeUp")
+        $(e.target).fadeOut().fadeIn();
+        $.ajax({
+            url: window.location.origin + "/sonos/volume/up",
+            type: "GET",
+            dataType: "html",
+            success: function(data) {
+                updateSonosVolumeUX(JSON.parse(data));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // debug here
+            }
+        });
 
     });
 
     $("#volup").click(function(e) {
         e.preventDefault();
         console.log("VolumeUp")
+        $(e.target).fadeOut().fadeIn();
         $.ajax({
             url: window.location.origin + "/sonos/volume/up",
             type: "GET",
@@ -274,6 +290,7 @@ function bindListeners() {
 
     $("#voldown").click(function(e) {
         e.preventDefault();
+        $(e.target).fadeOut().fadeIn();
         console.log("VolumeDown")
         $.ajax({
             url: window.location.origin + "/sonos/volume/down",
