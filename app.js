@@ -18,7 +18,7 @@ var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 var ringpasswordPath = path.resolve(__dirname, 'ring.password');
 var ringpassword = fs.readFileSync(ringpasswordPath, 'utf8');
-
+console.log("RING :'"+ringpassword+"'")
 
 
 var ioSocket;
