@@ -217,6 +217,7 @@ function bindListeners() {
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 // debug here
+                alert("error:" + textStatus)
             }
         });
     }
@@ -470,10 +471,10 @@ window.onload = function() {
         // getSonosVolume();
     }, refreshtime);
 
-    setInterval(function() {
-        // getSonosVolume();
-        getSonosCurrentTrack();
-    }, sonosVolumeRefreshtime);
+    // setInterval(function() {
+    //     // getSonosVolume();
+    //     getSonosCurrentTrack();
+    // }, sonosVolumeRefreshtime);
 
 
     var tday = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");

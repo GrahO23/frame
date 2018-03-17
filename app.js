@@ -210,11 +210,12 @@ function listenForVolumeChanges(lastVolume) {
     
     // console.log('listenForVolumeChanges');
     sonosClient.volume().then(function(volume) {
-        console.log('lastVolume: ' + lastVolume  + " vol: " + JSON.stringify(volume));
+        
         if(lastVolume && 
             (lastVolume.volume !== volume.volume || 
                 lastVolume.muted !== volume.muted) ) {
             // console.log('vol change: ' + volume );
+            console.log('Volume Changed: ' + JSON.stringify(lastVolume)  + "new vol: " + JSON.stringify(volume));
             io.emit('volume change', volume);
         }
         setTimeout( function() {
