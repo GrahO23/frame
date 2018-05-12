@@ -625,7 +625,7 @@ window.onload = function() {
   getSonosVolume();
   getSonosCurrentTrack();
 
-  $("#clockbox").click(function() {
+  $("#tfl-outerdiv").click(function() {
     document.documentElement.webkitRequestFullScreen();
     // window.location.reload();
   });
