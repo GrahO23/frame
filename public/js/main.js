@@ -348,7 +348,7 @@ function getBusInfo() {
         type: "GET",
         dataType: "html",
         success: function(data) {
-            debugger
+            // debugger
         },
         error: function(jqXHR, textStatus, errorThrown) {
             $('#last-updated').html('textStatus');

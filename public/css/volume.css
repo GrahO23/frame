@@ -4,10 +4,10 @@
 
 .meter { 
             height: 20px;  /* Can be anything */
-            width: 259px;
-            padding-top: 150px;
+            width: 400px;
             position: fixed;
-            margin: 380px 0 20px 0; /* Just for demo spacing */
+            left: 50%;
+            margin: 470px 0 20px 0; /* Just for demo spacing */
             background: #000;
             -moz-border-radius: 25px;
             -webkit-border-radius: 25px;
