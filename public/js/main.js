@@ -3,137 +3,148 @@ var sonosVolumeRefreshtime = 1000 * 10; // 5 seconds
 var kindleWidth = 800;
 var kindleHeight = 600;
 
-
 var kindleFrame = {};
 var socket;
 
 $(document).ready(function() {
-    socket = io();
-    socket.on('volume change', function(msg) {
-        console.log("vol change " + JSON.stringify(msg));
-        updateSonosVolumeUX(msg);
-    });
-    bindListeners();
+  socket = io();
+  socket.on("volume change", function(msg) {
+    console.log("vol change " + JSON.stringify(msg));
+    updateSonosVolumeUX(msg);
+  });
+  bindListeners();
 });
 
-
 function reloadIFrames() {
-    tflIFrame.src = tflIFrame.src;
-    WeatherBugSticker_728x90_v2.src = WeatherBugSticker_728x90_v2.src;
+  tflIFrame.src = tflIFrame.src;
+  WeatherBugSticker_728x90_v2.src = WeatherBugSticker_728x90_v2.src;
 }
 //http://darkskyapp.github.io/skycons/
 
 function ftoc(fahrenheit) {
-    var celcius = (fahrenheit - 32) * 5 / 9;
-    celcius = +celcius.toFixed(2);
-    return Math.round(celcius);
+  var celcius = (fahrenheit - 32) * 5 / 9;
+  celcius = +celcius.toFixed(2);
+  return Math.round(celcius);
 }
 
 function decimalPlaces(input) {
-    return (+input.toFixed(2));
+  return +input.toFixed(2);
 }
 
-
 function skyconForForecast(type) {
-    if (type == 'clear-day') {
-        return Skycons.CLEAR_DAY;
-    } else if (type == 'clear-night') {
-        return Skycons.CLEAR_NIGHT;
-    } else if (type == 'rain') {
-        return Skycons.RAIN;
-    } else if (type == 'snow') {
-        return Skycons.SNOW;
-    } else if (type == 'sleet') {
-        return Skycons.SLEET;
-    } else if (type == 'wind') {
-        return Skycons.WIND;
-    } else if (type == 'fog') {
-        return Skycons.FOG;
-    } else if (type == 'cloudy') {
-        return Skycons.CLOUDY;
-    } else if (type == 'partly-cloudy-day') {
-        return Skycons.PARTLY_CLOUDY_DAY;
-    } else if (type == 'partly-cloudy-night') {
-        return Skycons.PARTLY_CLOUDY_NIGHT;
-    }
+  if (type == "clear-day") {
     return Skycons.CLEAR_DAY;
+  } else if (type == "clear-night") {
+    return Skycons.CLEAR_NIGHT;
+  } else if (type == "rain") {
+    return Skycons.RAIN;
+  } else if (type == "snow") {
+    return Skycons.SNOW;
+  } else if (type == "sleet") {
+    return Skycons.SLEET;
+  } else if (type == "wind") {
+    return Skycons.WIND;
+  } else if (type == "fog") {
+    return Skycons.FOG;
+  } else if (type == "cloudy") {
+    return Skycons.CLOUDY;
+  } else if (type == "partly-cloudy-day") {
+    return Skycons.PARTLY_CLOUDY_DAY;
+  } else if (type == "partly-cloudy-night") {
+    return Skycons.PARTLY_CLOUDY_NIGHT;
+  }
+  return Skycons.CLEAR_DAY;
 }
 
 function getDayOfWeek(unixTime) {
-    var date = new Date(unixTime * 1000);
-    var day = date.getDay();
-    switch (day) {
-        case 0:
-            return 'Sun';
-        case 1:
-            return 'Mon';
-        case 2:
-            return 'Tue';
-        case 3:
-            return 'Wed';
-        case 4:
-            return 'Thu';
-        case 5:
-            return 'Fri';
-        case 6:
-            return 'Sat';
-        default:
-            break;
-    }
-    return '???';
+  var date = new Date(unixTime * 1000);
+  var day = date.getDay();
+  switch (day) {
+    case 0:
+      return "Sun";
+    case 1:
+      return "Mon";
+    case 2:
+      return "Tue";
+    case 3:
+      return "Wed";
+    case 4:
+      return "Thu";
+    case 5:
+      return "Fri";
+    case 6:
+      return "Sat";
+    default:
+      break;
+  }
+  return "???";
 }
 
 function updateSonosVolumeUX(volume) {
-    $(".meter span").css("width", volume.volume + "%");
-    if (volume.muted) {
-        document.getElementById('muteIcon').style.display = 'block';
-        document.getElementById('meter').style.display = 'none';
-    } else {
-        document.getElementById('muteIcon').style.display = 'none';
-        document.getElementById('meter').style.display = 'block';
-    }
+  $(".meter span").css("width", volume.volume + "%");
+  if (volume.muted) {
+    document.getElementById("muteIcon").style.display = "block";
+    document.getElementById("meter").style.display = "none";
+  } else {
+    document.getElementById("muteIcon").style.display = "none";
+    document.getElementById("meter").style.display = "block";
+  }
 }
-
 
 function updateSonosTrackUX(track) {
-    var display = '';
-    if (track.artist) {
-        display += track.artist + " - ";
-    }
-    if (track.title) {
-        display += track.title;
-    }
-    $('#now-playing').html(display);
+  var display = "";
+  if (track.artist) {
+    display += track.artist + " - ";
+  }
+  if (track.title) {
+    display += track.title;
+  }
+  $("#now-playing").html(display);
 }
 
-
 function updateForecastUX(forecast) {
+  //Current weather;
+  var summary = forecast.currently.summary;
+  var temp = ftoc(forecast.currently.temperature);
+  var icon = forecast.currently.icon;
+  kindleFrame.skycons.set("currently", skyconForForecast(icon));
+  $("#currently-temp").html(temp + "&deg");
+  if (forecast.currently.precipProbability > 0) {
+    $("#currently-container #current-rain-chance").show();
+    $("#currently-container #current-rain-chance").html(
+      "Rain soon " +
+        decimalPlaces(forecast.currently.precipProbability * 100) +
+        "%"
+    );
+  } else {
+    $("#currently-container #current-rain-chance").hide();
+  }
 
-    //Current weather;
-    var summary = forecast.currently.summary;
-    var temp = ftoc(forecast.currently.temperature);
-    var icon = forecast.currently.icon;
-    kindleFrame.skycons.set("currently", skyconForForecast(icon));
-    $('#currently-temp').html(temp + '&deg');
-    if (forecast.currently.precipProbability > 0) {
-        $('#currently-container #current-rain-chance').show();
-        $('#currently-container #current-rain-chance').html('Rain soon ' + decimalPlaces(forecast.currently.precipProbability * 100) + '%');
-    } else {
-        $('#currently-container #current-rain-chance').hide();
+  var daily = forecast.daily.data;
+  if (daily.length >= 3) {
+    for (var i = 0; i < 3; i++) {
+      var day = daily[i];
+      var element = document.querySelector(
+        "#weather-container #forecast-day-" + i + " .forecast-day-canvas"
+      );
+      kindleFrame.skycons.set(element, skyconForForecast(day.icon));
+
+      $("#weather-container #forecast-day-" + i + " .forecast-day-temp").html(
+        ftoc(day.temperatureMin) +
+          "%" +
+          "/" +
+          ftoc(day.temperatureMax) +
+          "&deg " +
+          "(" +
+          decimalPlaces(day.precipProbability * 100) +
+          "%" +
+          ")"
+      );
+      $("#weather-container #forecast-day-" + i + " .day-label").html(
+        getDayOfWeek(day.time)
+      );
     }
-
-    var daily = forecast.daily.data;
-    if (daily.length >= 3) {
-        for (var i = 0; i < 3; i++) {
-            var day = daily[i];
-            var element = document.querySelector('#weather-container #forecast-day-' + i + ' .forecast-day-canvas');
-            kindleFrame.skycons.set(element, skyconForForecast(day.icon));
-
-            $('#weather-container #forecast-day-' + i + ' .forecast-day-temp').html(ftoc(day.temperatureMin) + '%' +
-                '/' + ftoc(day.temperatureMax) + '&deg ' + '(' + decimalPlaces(day.precipProbability * 100) + '%' + ')');
-            $('#weather-container #forecast-day-' + i + ' .day-label').html(getDayOfWeek(day.time));
-        }
-    }
+  }
 }
 /*
   "currently": {
@@ -192,359 +203,430 @@ function updateForecastUX(forecast) {
       },
 */
 function getForecast() {
-    $.ajax({
-        url: window.location.origin + "/forecast",
-        type: "GET",
-        dataType: "html",
-        success: function(data) {
-            updateForecastUX(JSON.parse(data));
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // debug here
-        }
-    });
+  $.ajax({
+    url: window.location.origin + "/forecast",
+    type: "GET",
+    dataType: "html",
+    success: function(data) {
+      updateForecastUX(JSON.parse(data));
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // debug here
+    }
+  });
 }
 
 function bindListeners() {
-
-    function mute() {
-        $.ajax({
-            url: window.location.origin + "/sonos/mute",
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                // updateSonosVolumeUX(JSON.parse(data));
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // debug here
-                alert("error:" + textStatus)
-            }
-        });
-    }
-
-
-    $("#now-playing").click(function() {
-                $.ajax({
-            url: window.location.origin + "/sonos/next",
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                // updateSonosVolumeUX(JSON.parse(data));
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // debug here
-            }
-        });
-
+  function mute() {
+    $.ajax({
+      url: window.location.origin + "/sonos/mute",
+      type: "GET",
+      dataType: "html",
+      success: function(data) {
+        // updateSonosVolumeUX(JSON.parse(data));
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // debug here
+        alert("error:" + textStatus);
+      }
     });
+  }
 
-
-    $("#meter").click(function() {
-        mute();
-
+  $("#now-playing").click(function() {
+    $.ajax({
+      url: window.location.origin + "/sonos/next",
+      type: "GET",
+      dataType: "html",
+      success: function(data) {
+        // updateSonosVolumeUX(JSON.parse(data));
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // debug here
+      }
     });
+  });
 
-    
-    $("#muteVolume").click(function(e) {
-        e.preventDefault();
-        console.log("muteVolume")
-        $(e.target).fadeOut().fadeIn();
-        mute();
+  $("#meter").click(function() {
+    mute();
+  });
 
+  $("#muteVolume").click(function(e) {
+    e.preventDefault();
+    console.log("muteVolume");
+    $(e.target)
+      .fadeOut()
+      .fadeIn();
+    mute();
+  });
+
+  $("#gardenlight").click(function(e) {
+    e.preventDefault();
+    console.log("garden light toggle");
+    $(e.target)
+      .fadeOut()
+      .fadeIn();
+    $.ajax({
+      url: window.location.origin + "/ring/garden/light",
+      type: "GET",
+      dataType: "html",
+      success: function(data) {
+        console.log("toggle light: " + data);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // debug here
+        console.log("toggle light error");
+      }
     });
+  });
 
-    $("#gardenlight").click(function(e) {
-        e.preventDefault();
-        console.log("garden light toggle")
-        $(e.target).fadeOut().fadeIn();
-        $.ajax({
-            url: window.location.origin + "/ring/garden/light",
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                console.log('toggle light: '+ data)
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // debug here
-                console.log('toggle light error')
-            }
-        });
-
+  $("#volup").click(function(e) {
+    e.preventDefault();
+    console.log("VolumeUp");
+    $(e.target)
+      .fadeOut()
+      .fadeIn();
+    $.ajax({
+      url: window.location.origin + "/sonos/volume/up",
+      type: "GET",
+      dataType: "html",
+      success: function(data) {
+        updateSonosVolumeUX(JSON.parse(data));
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // debug here
+      }
     });
+  });
 
-    $("#volup").click(function(e) {
-        e.preventDefault();
-        console.log("VolumeUp")
-        $(e.target).fadeOut().fadeIn();
-        $.ajax({
-            url: window.location.origin + "/sonos/volume/up",
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                updateSonosVolumeUX(JSON.parse(data));
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // debug here
-            }
-        });
-
+  $("#voldown").click(function(e) {
+    e.preventDefault();
+    $(e.target)
+      .fadeOut()
+      .fadeIn();
+    console.log("VolumeDown");
+    $.ajax({
+      url: window.location.origin + "/sonos/volume/down",
+      type: "GET",
+      dataType: "html",
+      success: function(data) {
+        updateSonosVolumeUX(JSON.parse(data));
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // debug here
+      }
     });
-
-    $("#voldown").click(function(e) {
-        e.preventDefault();
-        $(e.target).fadeOut().fadeIn();
-        console.log("VolumeDown")
-        $.ajax({
-            url: window.location.origin + "/sonos/volume/down",
-            type: "GET",
-            dataType: "html",
-            success: function(data) {
-                updateSonosVolumeUX(JSON.parse(data));
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // debug here
-            }
-        });
-
-    });
+  });
 }
 
-
-
-
 function getSonosVolume() {
-
-    $.ajax({
-        url: window.location.origin + "/sonos/volume",
-        type: "GET",
-        dataType: "html",
-        success: function(data) {
-            updateSonosVolumeUX(JSON.parse(data));
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // debug here
-        }
-    });
+  $.ajax({
+    url: window.location.origin + "/sonos/volume",
+    type: "GET",
+    dataType: "html",
+    success: function(data) {
+      updateSonosVolumeUX(JSON.parse(data));
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // debug here
+    }
+  });
 }
 
 function getSonosCurrentTrack() {
-
-    $.ajax({
-        url: window.location.origin + "/sonos/currentTrack",
-        type: "GET",
-        dataType: "html",
-        success: function(data) {
-            updateSonosTrackUX(JSON.parse(data));
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // debug here
-        }
-    });
+  $.ajax({
+    url: window.location.origin + "/sonos/currentTrack",
+    type: "GET",
+    dataType: "html",
+    success: function(data) {
+      updateSonosTrackUX(JSON.parse(data));
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // debug here
+    }
+  });
 }
 
 function getBusInfo() {
-    $.ajax({
-        url: window.location.origin + "/bus",
-        type: "GET",
-        dataType: "html",
-        success: function(data) {
-            // debugger
-            $("#buses").empty();
-            var businfo = JSON.parse(data);
-            debugger
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            $('#last-updated').html('textStatus');
+  $.ajax({
+    url: window.location.origin + "/bus",
+    type: "GET",
+    dataType: "html",
+    success: function(data) {
+      // debugger
+      $("#buses").empty();
+      var businfo = JSON.parse(data);
+      /*
+            businfo[0].lineId
+            destinationName
+            expectedArrival
+            */
+      var busStyle =
+        ' style="color: #FFD700; background-color: #000000 ; font-size: 150%; margin-top: 20px;"';
+      var timeStyle =
+        ' style="color: #FFD700; background-color: #000000 ; font-size: 150%"';
+      var now = moment(Date());
+
+      businfo = businfo.sort(function(a, b){return a.expectedArrival > b.expectedArrival});
+
+      businfo.forEach(function(bus) {
+        if (bus.lineId === "179") {
+          var expected = moment(bus.expectedArrival);
+          var time = expected - now;
+          if(time > 0){
+              time = (time/1000)/60
+          }
+          $(
+            "<dt" +
+              busStyle +
+              ">" +
+              bus.lineId +
+              " " +
+              bus.destinationName +
+              "</dt>"+
+              "<dt" +
+              timeStyle +
+              ">" +
+              Math.trunc(time) +
+              " mins </dt>"
+          ).appendTo("#buses");
         }
-    });
+      });
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      $("#last-updated").html("textStatus");
+    }
+  });
 }
 function getTubeInfo() {
-    var tubeXml = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
-    var tubeJSON = "http://api.tubeupdates.com/?method=get.status&return=name,status,id&callback=?";
-    $.ajax({
-        url: window.location.origin + "/tube",
-        type: "GET",
-        dataType: "html",
-        success: function(data) {
-            $("#tubelines").empty();
-            var tubeStatus = JSON.parse(data);
-            console.log("got tubeStatus");
-            var statusArray = tubeStatus.ArrayOfLineStatus.LineStatus;
+  var tubeXml = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
+  var tubeJSON =
+    "http://api.tubeupdates.com/?method=get.status&return=name,status,id&callback=?";
+  $.ajax({
+    url: window.location.origin + "/tube",
+    type: "GET",
+    dataType: "html",
+    success: function(data) {
+      $("#tubelines").empty();
+      var tubeStatus = JSON.parse(data);
+      console.log("got tubeStatus");
+      var statusArray = tubeStatus.ArrayOfLineStatus.LineStatus;
 
-            var delayCount = 0;
-            //If we have move than 3 delays won't fit in list
-            //so adjust size accordingly
-            statusArray.forEach(function(l) {
-                if (l.Status[0].$.Description != 'Good Service' && l.Line[0].$.Name !== "Overground") {
-                    delayCount += 1;
-                }
-            });
-            var delayFontSize = '150%';
-            if (delayCount > 4) {
-                delayFontSize = '130%';
-            }
-
-            if (delayCount > 0) {
-                var backgroundColor =  '#000000';
-                statusArray.forEach(function(line) {
-                    console.log(line);
-                    var name = line.Line[0].$.Name;
-                    if (name == 'Hammersmith and City') {
-                        name = 'Ham & City';
-                        backgroundColor =  '#D799AF';
-
-                    }
-                    else if (name == 'Metropolitan') {
-                        name = 'Metro';
-                        backgroundColor =  '#751056';
-                    }
-                    else if (name == 'Waterloo and City') {
-                        name = 'W & C';
-                        backgroundColor =  '#76D0BD';
-                    }
-                    else if (name == 'District') {
-                        backgroundColor =  '#007229';
-                    }
-                    else if (name == 'Metropolitan') {
-                        backgroundColor =  '#751056';
-                    }
-                    else if (name == 'Bakerloo') {
-                        backgroundColor =  '#000000';
-                    }
-                    else if (name == 'Central') {
-                        backgroundColor =  '#DC241F';   
-                    }
-                    else if (name == 'Circle') {
-                        backgroundColor =  '#FFCE00';
-                    }
-                    else if (name == 'Jubilee') {
-                        backgroundColor =  '#6A7278'; 
-                    }
-                    else if (name == 'Northern') {
-                        backgroundColor =  '#000000'; 
-                    }
-                    else if (name == 'Piccadilly') {
-                        backgroundColor =  '#0019A8'; 
-                    }
-                    else if (name == 'Victoria') {
-                        backgroundColor =  '#00A0E2';   
-                    }
-                    else if (name == 'DLR') {
-                        backgroundColor =  '#00afad';   
-                    }
-
-
-
-                    if (name != 'Overground') {
-                        var status = line.Status[0].$.Description;
-                        var delayStyle = ' style="color: #ffffff; background-color: '+ backgroundColor +'; font-size: ' + delayFontSize + '"';
-                        if (status != 'Good Service') {
-                            $('<dt' + delayStyle + '>' + name + ' ' + status + '<dt>').appendTo("#tubelines");
-                        }
-                    }
-
-                });
-            } else {
-                //Just show Good Service Message
-                var goodServiceStyle = ' style="color: #000000; background-color: #ffffff; font-size: 300%"';
-                $('<dt' + goodServiceStyle + '><b>Good Service All Lines</b><dt>').appendTo("#tubelines");
-            }
-            var date = new Date();
-            $('#last-updated').html('last updated: ' + date.getHours() + ':' + date.getMinutes() + '  ' + date.getDay() + '/' +
-                date.getMonth() + '/' + date.getFullYear());
-
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            $('#last-updated').html('textStatus');
+      var delayCount = 0;
+      //If we have move than 3 delays won't fit in list
+      //so adjust size accordingly
+      statusArray.forEach(function(l) {
+        if (
+          l.Status[0].$.Description != "Good Service" &&
+          l.Line[0].$.Name !== "Overground"
+        ) {
+          delayCount += 1;
         }
-    });
+      });
+      var delayFontSize = "150%";
+      if (delayCount > 4) {
+        delayFontSize = "130%";
+      }
+
+      if (delayCount > 0) {
+        var backgroundColor = "#000000";
+        statusArray.forEach(function(line) {
+          console.log(line);
+          var name = line.Line[0].$.Name;
+          if (name == "Hammersmith and City") {
+            name = "Ham & City";
+            backgroundColor = "#D799AF";
+          } else if (name == "Metropolitan") {
+            name = "Metro";
+            backgroundColor = "#751056";
+          } else if (name == "Waterloo and City") {
+            name = "W & C";
+            backgroundColor = "#76D0BD";
+          } else if (name == "District") {
+            backgroundColor = "#007229";
+          } else if (name == "Metropolitan") {
+            backgroundColor = "#751056";
+          } else if (name == "Bakerloo") {
+            backgroundColor = "#000000";
+          } else if (name == "Central") {
+            backgroundColor = "#DC241F";
+          } else if (name == "Circle") {
+            backgroundColor = "#FFCE00";
+          } else if (name == "Jubilee") {
+            backgroundColor = "#6A7278";
+          } else if (name == "Northern") {
+            backgroundColor = "#000000";
+          } else if (name == "Piccadilly") {
+            backgroundColor = "#0019A8";
+          } else if (name == "Victoria") {
+            backgroundColor = "#00A0E2";
+          } else if (name == "DLR") {
+            backgroundColor = "#00afad";
+          }
+
+          if (name != "Overground") {
+            var status = line.Status[0].$.Description;
+            var delayStyle =
+              ' style="color: #ffffff; background-color: ' +
+              backgroundColor +
+              "; font-size: " +
+              delayFontSize +
+              '"';
+            if (status != "Good Service") {
+              $(
+                "<dt" + delayStyle + ">" + name + " " + status + "<dt>"
+              ).appendTo("#tubelines");
+            }
+          }
+        });
+      } else {
+        //Just show Good Service Message
+        var goodServiceStyle =
+          ' style="color: #000000; background-color: #ffffff; font-size: 300%"';
+        $(
+          "<dt" + goodServiceStyle + "><b>Good Service All Lines</b><dt>"
+        ).appendTo("#tubelines");
+      }
+      var date = new Date();
+      $("#last-updated").html(
+        "last updated: " +
+          date.getHours() +
+          ":" +
+          date.getMinutes() +
+          "  " +
+          date.getDay() +
+          "/" +
+          date.getMonth() +
+          "/" +
+          date.getFullYear()
+      );
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      $("#last-updated").html("textStatus");
+    }
+  });
 }
 
 window.onload = function() {
-    // var tflIFrame = document.getElementById("tfl-iframe");
-    //remove rotation on pc
-    kindleFrame.skycons = new Skycons({
-        "color": "black"
-    });
-    kindleFrame.skycons.add(document.getElementById("currently"), Skycons.CLEAR_DAY);
-    kindleFrame.skycons.add(document.querySelector('#weather-container #forecast-day-0 .forecast-day-canvas'), Skycons.CLEAR_DAY);
-    kindleFrame.skycons.add(document.querySelector('#weather-container #forecast-day-1 .forecast-day-canvas'), Skycons.CLEAR_DAY);
-    kindleFrame.skycons.add(document.querySelector('#weather-container #forecast-day-2 .forecast-day-canvas'), Skycons.CLEAR_DAY);
+  // var tflIFrame = document.getElementById("tfl-iframe");
+  //remove rotation on pc
+  kindleFrame.skycons = new Skycons({
+    color: "black"
+  });
+  kindleFrame.skycons.add(
+    document.getElementById("currently"),
+    Skycons.CLEAR_DAY
+  );
+  kindleFrame.skycons.add(
+    document.querySelector(
+      "#weather-container #forecast-day-0 .forecast-day-canvas"
+    ),
+    Skycons.CLEAR_DAY
+  );
+  kindleFrame.skycons.add(
+    document.querySelector(
+      "#weather-container #forecast-day-1 .forecast-day-canvas"
+    ),
+    Skycons.CLEAR_DAY
+  );
+  kindleFrame.skycons.add(
+    document.querySelector(
+      "#weather-container #forecast-day-2 .forecast-day-canvas"
+    ),
+    Skycons.CLEAR_DAY
+  );
 
-    // if (window.screen.width > 800) {
-    //     $("body").css("-webkit-transform", "rotate(0deg)");
-    //     $("body").css("-webkit--origin", "0 0");
-    // }
+  // if (window.screen.width > 800) {
+  //     $("body").css("-webkit-transform", "rotate(0deg)");
+  //     $("body").css("-webkit--origin", "0 0");
+  // }
 
-
-    var WeatherBugSticker_728x90_v2 = document.getElementById("WeatherBugSticker_728x90_v2");
-    setInterval(function() {
-        // tflIFrame.src = tflIFrame.src;
-        getTubeInfo();
-        getBusInfo();
-        getForecast();
-        // getSonosVolume();
-    }, refreshtime);
-
-    // setInterval(function() {
-    //     // getSonosVolume();
-    //     getSonosCurrentTrack();
-    // }, sonosVolumeRefreshtime);
-
-
-    var tday = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-    var tmonth = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-
-
-    var getClock = function() {
-        d = new Date();
-        nhour = d.getHours();
-        nmin = d.getMinutes();
-
-        if (nhour == 0) {
-            ap = " AM";
-            nhour = 12;
-        } else if (nhour <= 11) {
-            ap = " AM";
-        } else if (nhour == 12) {
-            ap = " PM";
-        } else if (nhour >= 13) {
-            ap = " PM";
-            nhour -= 12;
-        }
-
-        if (nmin <= 9) {
-            nmin = "0" + nmin;
-        }
-
-        document.getElementById('clock').innerHTML = nhour + ":" + nmin;
-        document.getElementById('am').innerHTML = ap;
-
-        d = new Date();
-        nday = d.getDay();
-        nmonth = d.getMonth();
-        ndate = d.getDate();
-        nyear = d.getYear();
-
-        document.getElementById('date').innerHTML = tday[nday] + ", " + tmonth[nmonth] + " " + ndate;
-    };
-
-
-    getClock();
-    setInterval(function() {
-        getClock();
-    }, 1000 * 60);
-
+  var WeatherBugSticker_728x90_v2 = document.getElementById(
+    "WeatherBugSticker_728x90_v2"
+  );
+  setInterval(function() {
+    // tflIFrame.src = tflIFrame.src;
     getTubeInfo();
     getBusInfo();
     getForecast();
-    getSonosVolume();
-    getSonosCurrentTrack();
+    // getSonosVolume();
+  }, refreshtime);
 
+  // setInterval(function() {
+  //     // getSonosVolume();
+  //     getSonosCurrentTrack();
+  // }, sonosVolumeRefreshtime);
 
-    $('#clockbox').click(function() {
-        document.documentElement.webkitRequestFullScreen();
-        // window.location.reload();
-    });
+  var tday = new Array(
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  );
+  var tmonth = new Array(
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  );
 
+  var getClock = function() {
+    d = new Date();
+    nhour = d.getHours();
+    nmin = d.getMinutes();
+
+    if (nhour == 0) {
+      ap = " AM";
+      nhour = 12;
+    } else if (nhour <= 11) {
+      ap = " AM";
+    } else if (nhour == 12) {
+      ap = " PM";
+    } else if (nhour >= 13) {
+      ap = " PM";
+      nhour -= 12;
+    }
+
+    if (nmin <= 9) {
+      nmin = "0" + nmin;
+    }
+
+    document.getElementById("clock").innerHTML = nhour + ":" + nmin;
+    document.getElementById("am").innerHTML = ap;
+
+    d = new Date();
+    nday = d.getDay();
+    nmonth = d.getMonth();
+    ndate = d.getDate();
+    nyear = d.getYear();
+
+    document.getElementById("date").innerHTML =
+      tday[nday] + ", " + tmonth[nmonth] + " " + ndate;
+  };
+
+  getClock();
+  setInterval(function() {
+    getClock();
+  }, 1000 * 60);
+
+  getTubeInfo();
+  getBusInfo();
+  getForecast();
+  getSonosVolume();
+  getSonosCurrentTrack();
+
+  $("#clockbox").click(function() {
+    document.documentElement.webkitRequestFullScreen();
+    // window.location.reload();
+  });
 };
