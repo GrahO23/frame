@@ -21,6 +21,9 @@ var ringpassword = fs.readFileSync(ringpasswordPath, 'utf8');
 ringpassword = ringpassword.replace(/(\r\n\t|\n|\r\t)/gm,"");
 console.log("RING :'"+ringpassword+"'")
 
+var tflAppId = 'f7d78d69'
+var tflAppKey = '076a69254574f403e9f23126934031d9'
+
 
 var ioSocket;
 // The number of milliseconds in one day
