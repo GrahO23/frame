@@ -342,8 +342,19 @@ function getSonosCurrentTrack() {
     });
 }
 
-
-
+function getBusInfo() {
+    $.ajax({
+        url: window.location.origin + "/tube",
+        type: "GET",
+        dataType: "html",
+        success: function(data) {
+            debugger
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            $('#last-updated').html('textStatus');
+        }
+    });
+}
 function getTubeInfo() {
     var tubeXml = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
     var tubeJSON = "http://api.tubeupdates.com/?method=get.status&return=name,status,id&callback=?";
@@ -467,6 +478,7 @@ window.onload = function() {
     setInterval(function() {
         // tflIFrame.src = tflIFrame.src;
         getTubeInfo();
+        getBusInfo();
         getForecast();
         // getSonosVolume();
     }, refreshtime);
@@ -521,6 +533,7 @@ window.onload = function() {
     }, 1000 * 60);
 
     getTubeInfo();
+    getBusInfo();
     getForecast();
     getSonosVolume();
     getSonosCurrentTrack();

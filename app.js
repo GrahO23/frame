@@ -21,9 +21,9 @@ var ringpassword = fs.readFileSync(ringpasswordPath, 'utf8');
 ringpassword = ringpassword.replace(/(\r\n\t|\n|\r\t)/gm,"");
 console.log("RING :'"+ringpassword+"'")
 
-var tflAppId = 'f7d78d69'
-var tflAppKey = '076a69254574f403e9f23126934031d9'
-
+const tflAppId = 'f7d78d69'
+const tflAppKey = '076a69254574f403e9f23126934031d9'
+const SWSTOPE179 = '490000217E'
 
 var ioSocket;
 // The number of milliseconds in one day
@@ -70,6 +70,38 @@ app.get('/tube', function(req, res) {
         }
     });
 });
+
+//https://tfl.gov.uk/bus/stop/490000217E/south-woodford-station?lineId=179
+/*
+
+
+const tflAppId = 'f7d78d69'
+const tflAppKey = '076a69254574f403e9f23126934031d9'
+const SWSTOPE179 = '490000217E'
+
+*/
+
+
+///StopPoint/{id}/Arrivals
+app.get('/bus', function(req, res) {
+    console.log("/tube/");
+    unirest.get('https://api.tfl.gov.uk/StopPoint/'+SWSTOPE179+
+    '/Arrivals?app_id='+tflAppId+
+    '&app_key='+tflAppKey).end(function(response) {
+        // Except google trims the value passed :/
+        if (response) {
+            parser.parseString(response.body, function(err, result) {
+                result = JSON.stringify(result);
+                console.log('Done');
+                res.send(result);
+            });
+        } else {
+            res.send({});
+        }
+    });
+});
+
+
 
 app.get('/forecast', function(req, res) {
     console.log('forecast');
