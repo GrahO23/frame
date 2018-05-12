@@ -3,11 +3,11 @@
 
 
 .meter { 
-            height: 20px;  /* Can be anything */
+            height: 10px;  /* Can be anything */
             width: 400px;
             position: fixed;
-            left: 50%;
-            margin: 470px 0 20px 0; /* Just for demo spacing */
+            left: 380px;
+            bottom:120px;
             background: #000;
             -moz-border-radius: 25px;
             -webkit-border-radius: 25px;
