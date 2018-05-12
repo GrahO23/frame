@@ -344,11 +344,14 @@ function getSonosCurrentTrack() {
 
 function getBusInfo() {
     $.ajax({
-        url: window.location.origin + "/tube",
+        url: window.location.origin + "/bus",
         type: "GET",
         dataType: "html",
         success: function(data) {
             // debugger
+            $("#buses").empty();
+            var businfo = JSON.parse(data);
+            debugger
         },
         error: function(jqXHR, textStatus, errorThrown) {
             $('#last-updated').html('textStatus');
